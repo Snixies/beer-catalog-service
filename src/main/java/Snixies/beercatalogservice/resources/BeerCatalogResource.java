@@ -3,6 +3,7 @@ package Snixies.beercatalogservice.resources;
 import Snixies.beercatalogservice.models.Beer;
 import Snixies.beercatalogservice.models.CatalogItem;
 import Snixies.beercatalogservice.models.Rating;
+import Snixies.beercatalogservice.models.UserRating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,21 +24,15 @@ public class BeerCatalogResource {
 
     @RequestMapping("/{userId}")
     public List<CatalogItem> getCatalolog(@PathVariable("userId") String userId){
-        List<Rating> ratings = Arrays.asList(
-              new Rating(1,4),
-              new Rating(2,5)
-        );
+        UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingsdata/users/" + userId, UserRating.class);
 
-        return ratings.stream().map(rating -> {
+        return ratings.getUserRatings().stream().map(rating -> {
+            //foreach beerId, call beer info svc and get details
             Beer beer = restTemplate.getForObject("http://localhost:8082/beers/" + rating.getBeerId(), Beer.class);
+            //put them all together
             return new CatalogItem(beer.getName(), beer.getDescription(), rating.getRating());
 
         } )
         .collect(Collectors.toList());
-
-        //foreach beerId, call beer info svc and get details
-
-        //put them all together
-
     }
 }
