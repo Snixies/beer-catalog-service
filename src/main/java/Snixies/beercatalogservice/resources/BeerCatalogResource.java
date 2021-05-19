@@ -3,6 +3,7 @@ package Snixies.beercatalogservice.resources;
 import Snixies.beercatalogservice.models.Beer;
 import Snixies.beercatalogservice.models.CatalogItem;
 import Snixies.beercatalogservice.models.Rating;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +18,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/catalog")
 public class BeerCatalogResource {
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @RequestMapping("/{userId}")
     public List<CatalogItem> getCatalolog(@PathVariable("userId") String userId){
-
-        RestTemplate restTemplate = new RestTemplate();
-
-
         List<Rating> ratings = Arrays.asList(
               new Rating(1,4),
               new Rating(2,5)
