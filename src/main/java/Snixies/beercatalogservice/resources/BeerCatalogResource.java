@@ -24,11 +24,11 @@ public class BeerCatalogResource {
 
     @RequestMapping("/{userId}")
     public List<CatalogItem> getCatalolog(@PathVariable("userId") int userId){
-        UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingsdata/users/" + userId, UserRating.class);
+        UserRating ratings = restTemplate.getForObject("http://beer-rating-data-service/ratingsdata/users/" + userId, UserRating.class);
 
         return ratings.getUserRatings().stream().map(rating -> {
             //foreach beerId, call beer info svc and get details
-            Beer beer = restTemplate.getForObject("http://localhost:8082/beers/" + rating.getBeerId(), Beer.class);
+            Beer beer = restTemplate.getForObject("http://beer-info-service/beers/" + rating.getBeerId(), Beer.class);
             //put them all together
             return new CatalogItem(beer.getName(), beer.getDescription(), rating.getRating());
 
