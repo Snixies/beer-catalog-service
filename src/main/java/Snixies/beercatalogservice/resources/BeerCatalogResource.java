@@ -41,11 +41,9 @@ public class BeerCatalogResource {
         } )
         .collect(Collectors.toList());
     }
-    @RequestMapping(method = RequestMethod.POST, value ="/addBeer/{beerId}/{beerName}/{beerDiscription}")
-    public ResponseEntity addBeer(@PathVariable("beerId") int beerId, @PathVariable("beerName") String beerName, @PathVariable("beerDescription") String beerDescription, @RequestBody Beer beer){
-        beer.setBeerId(beerId);
-        beer.setName(beerName);
-        beer.setDescription(beerDescription);
+    @RequestMapping(method = RequestMethod.POST, value ="/addBeer/{beerId}/{beerName}/{beerDescription}")
+    public ResponseEntity addBeer(@PathVariable("beerId") int beerId, @PathVariable("beerName") String beerName, @PathVariable("beerDescription") String beerDescription){
+        Beer beer = new Beer(beerId, beerName, beerDescription);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
