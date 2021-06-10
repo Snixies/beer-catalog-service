@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,8 +41,8 @@ public class BeerCatalogResource {
         } )
         .collect(Collectors.toList());
     }
-    @PostMapping(value = "/addBeer/{beerId}/{beerName}/{beerDiscription}", consumes = "application/json", produces = "application/json")
-    public void addBeer(@PathVariable("beerId") int beerId, @PathVariable("beerName") String beerName, @PathVariable("beerDescription") String beerDescription, @RequestBody Beer beer){
+    @RequestMapping(method = RequestMethod.POST, value ="/addBeer/{beerId}/{beerName}/{beerDiscription}")
+    public ResponseEntity addBeer(@PathVariable("beerId") int beerId, @PathVariable("beerName") String beerName, @PathVariable("beerDescription") String beerDescription, @RequestBody Beer beer){
         beer.setBeerId(beerId);
         beer.setName(beerName);
         beer.setDescription(beerDescription);
@@ -50,7 +51,7 @@ public class BeerCatalogResource {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<String>(beer.toString(), headers);
 
-        restTemplate.postForObject("http://beer-info-service/addBeer/" + beer.getBeerId() + "/" + beer.getName() + "/" + beer.getDescription(), request, Beer.class);
+        return ResponseEntity.ok(beer);
     }
 
 }
